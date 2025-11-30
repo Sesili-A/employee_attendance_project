@@ -52,14 +52,7 @@ const EmployeeDashboard = () => {
         {!loading && today && (
           <>
             {/* Summary Cards */}
-            <div
-              style={{
-                display: "flex",
-                gap: 20,
-                marginBottom: 20,
-                flexWrap: "wrap",
-              }}
-            >
+            <div className="responsive-row">
               <div className="card" style={{ flex: 1 }}>
                 <h4>Status</h4>
                 <p style={{ fontSize: 22 }}>

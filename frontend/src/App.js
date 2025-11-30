@@ -7,6 +7,7 @@ import EmployeeDashboard from "./pages/EmployeeDashboard";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import EmployeeHistory from "./pages/EmployeeHistory";
 import EmployeeSummary from "./pages/EmployeeSummary";
+import ManagerCalendar from "./pages/ManagerCalendar";
 
 
 const ProtectedRoute = ({ children, role }) => {
@@ -73,6 +74,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/manager/calendar" element={<ManagerCalendar />} />
+
 
       </Routes>
     </div>

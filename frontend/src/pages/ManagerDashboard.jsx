@@ -61,18 +61,20 @@ const ManagerDashboard = () => {
     <div className="main-content">
       <div className="card">
         
-        {/* HEADER */}
         <h2>Manager Dashboard</h2>
-        <p>Welcome, {user?.name}</p>
+          <p>Welcome, {user.name}</p>
 
-        <button
-          onClick={handleLogout}
-          style={{ backgroundColor: "red", marginBottom: 20 }}
-        >
-          Logout
-        </button>
+          <button onClick={handleLogout}>Logout</button>
 
-        <hr />
+          <button 
+            style={{ marginTop: "10px", marginBottom: "20px",marginLeft:"30px" }}
+            onClick={() => navigate("/manager/calendar")}
+          >
+            📅 View Calendar
+          </button>
+
+          <hr />
+
 
         {/* TODAY'S STATUS */}
         <h3>Today's Status</h3>
@@ -154,7 +156,7 @@ const ManagerDashboard = () => {
 
         {/* ALL ATTENDANCE TABLE */}
         <h3>All Attendance Records</h3>
-
+        <div className="table-wrapper">
         <table className="styled-table" border="1" width="100%" cellPadding="8" style={{ marginTop: 15 }}>
           <thead>
             <tr>
@@ -198,6 +200,7 @@ const ManagerDashboard = () => {
             ))}
           </tbody>
         </table>
+      </div>
 
       </div>
     </div>

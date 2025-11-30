@@ -5,12 +5,13 @@ import morgan from "morgan";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import attendanceRoutes from "./routes/attendanceRoutes.js";
-
+import autoAbsentMiddleware from "./middlewares/autoAbsentMiddleware.js";
 dotenv.config();
 connectDB();
 
 const app = express();
 app.use(express.json());
+app.use(autoAbsentMiddleware);
 app.use(cors());
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);

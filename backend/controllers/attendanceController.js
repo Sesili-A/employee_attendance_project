@@ -11,7 +11,6 @@ const getTodayDateStr = () => {
   const day = String(now.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
-
 /**
  * Employee: POST /api/attendance/checkin
  */
@@ -31,17 +30,30 @@ export const checkIn = async (req, res) => {
 
     const now = new Date();
 
+    // ------------------------------
+    // LATE LOGIC (10:15 AM threshold)
+    // ------------------------------
+    const checkinHour = now.getHours();
+    const checkinMinute = now.getMinutes();
+
+    let status = "present";
+    if (checkinHour > 10 || (checkinHour === 10 && checkinMinute > 15)) {
+      status = "late";
+    }
+
     if (!attendance) {
+      // first attendance record of the day
       attendance = await Attendance.create({
         userId,
         date: today,
         checkInTime: now,
-        status: "present",
+        status,
         totalHours: 0,
       });
     } else {
+      // updating existing attendance doc
       attendance.checkInTime = now;
-      attendance.status = "present";
+      attendance.status = status;
       await attendance.save();
     }
 
@@ -49,11 +61,13 @@ export const checkIn = async (req, res) => {
       message: "Check-in successful",
       attendance,
     });
+
   } catch (err) {
     console.error("checkIn error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 /**
  * Employee: POST /api/attendance/checkout
@@ -78,9 +92,24 @@ export const checkOut = async (req, res) => {
     const now = new Date();
     attendance.checkOutTime = now;
 
+    // Calculate hours worked
     const diffMs = now - attendance.checkInTime;
     const hours = diffMs / (1000 * 60 * 60);
+
     attendance.totalHours = Number(hours.toFixed(2));
+
+    /* -----------------------------
+       HALF-DAY LOGIC (NEW)
+       ----------------------------- */
+
+    if (attendance.totalHours > 0 && attendance.totalHours < 4) {
+      attendance.status = "halfday";
+    } else {
+      // If status wasn't already set earlier
+      if (!attendance.status) {
+        attendance.status = "present";
+      }
+    }
 
     await attendance.save();
 
@@ -93,6 +122,8 @@ export const checkOut = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 /**
  * Employee: GET /api/attendance/today
