@@ -233,18 +233,25 @@ Employee Dashboard
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f0431238-14cf-4bad-98d4-1c6d4deb3df7" />
 
 Check-in / Check-out
-
-Calendar View
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/6c17dbb2-df99-456f-bf96-28742cfa1d32" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/87062007-c73f-4c0f-b291-06775eb1fb38" />
 
 Attendance History (table + calendar)
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/13e607c7-1894-40d2-a7d6-f277fdc3da42" />
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9f8b7b72-0a2a-4b2d-a5dd-1d91c807145c" />
+
 
 Monthly Summary
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/afb5750e-6bfd-413f-a486-f00df5d60a8a" />
 
 Manager Dashboard
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/7301fff7-0905-47f4-8c88-01bb61d5854f" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/89a49d9e-e476-43bd-b150-23cf5c51daaa" />
 
-Manager Calendar
 
-Reports Page
+
+
 
 ✅ Project Status
 Feature	Status
