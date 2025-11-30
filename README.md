@@ -230,6 +230,7 @@ GET /api/attendance/export
 🖼 Screenshots 
 
 Employee Dashboard
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f0431238-14cf-4bad-98d4-1c6d4deb3df7" />
 
 Check-in / Check-out
 
