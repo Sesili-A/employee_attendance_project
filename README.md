@@ -1,86 +1,117 @@
-# Employee Attendance System (MERN)
+Employee Attendance System (MERN)
 
-A full-stack Employee Attendance System built with **MongoDB, Express, React, and Node.js**.  
-Employees can mark daily attendance (check-in / check-out), view their history & monthly summary;  
-Managers can view and filter attendance for all employees, see team summaries, and export CSV reports.
+A full-stack Employee Attendance System built using MongoDB, Express, React, and Node.js.
+Employees can mark attendance, view their history & monthly summary.
+Managers can monitor team attendance, view reports, and export data.
 
----
+✨ Features
+👨‍💻 Employee
 
-## ✨ Features
+Register & Login (JWT Authentication)
 
-### 👨‍💻 Employee
+Check-In & Check-Out
 
-- Register & Login (JWT authentication)
-- Check-in & Check-out
-- Automatic status:
-  - `present`
-  - `late` (check-in after 10:15 AM)
-  - `halfday` (less than 4 hours worked)
-  - `absent` (if no entry)
-- View **Today’s status** (dashboard)
-- View **Attendance History**:
-  - Calendar view (color-coded)
-  - Table view
-  - Click on date → modal with details
-- View **Monthly Summary**:
-  - Total days
-  - Total hours
+Automatic status detection:
 
-### 👩‍💼 Manager
+present
 
-- Manager login
-- View attendance for **all employees**
-- Filter by:
-  - Employee ID
-  - Status (present / late / halfday / absent)
-  - Date / Date range (UI-level filters)
-- Team summary:
-  - Total employees
-  - Total attendance records
-  - Total hours worked
-- Today’s attendance list
-- **Manager Calendar**:
-  - Monthly calendar showing aggregated status counts per day
-  - Click on date → list of employees & their status for that day
-- **Reports Page**:
-  - Advanced filters
-  - Export CSV (server-generated) with optional date range & employee filter
+late (after 10:15 AM)
 
----
+halfday (worked < 4 hours)
 
-## 🛠 Tech Stack
+absent (no check-in)
 
-**Backend**
+Dashboard with Today’s Status
 
-- Node.js
-- Express.js
-- MongoDB + Mongoose
-- JSON Web Token (JWT)
-- bcryptjs
-- dotenv
-- morgan
-- cors
+Attendance History:
 
-**Frontend**
+Calendar View (color-coded)
 
-- React
-- React Router
-- Redux Toolkit
-- Axios
-- date-fns
+Table View
 
----
+Modal with details
 
-## 📁 Project Structure (High Level)
+Monthly Summary:
 
-```bash
+Total days
+
+Total hours worked
+
+👩‍💼 Manager
+
+Manager Login
+
+View attendance of all employees
+
+Filters:
+
+Employee ID
+
+Status (present/late/halfday/absent)
+
+Date
+
+Team Summary:
+
+Total employees
+
+Total attendance records
+
+Total hours worked
+
+Today’s attendance list
+
+Manager Calendar View:
+
+Monthly team view with aggregated counts
+
+Click date → view list of employees
+
+Reports Page:
+
+Advanced filters
+
+CSV Export (with employee & date filters)
+
+🛠 Tech Stack
+Backend
+
+Node.js
+
+Express.js
+
+MongoDB + Mongoose
+
+JWT
+
+bcryptjs
+
+dotenv
+
+morgan
+
+cors
+
+Frontend
+
+React
+
+React Router
+
+Redux Toolkit
+
+Axios
+
+date-fns
+
+📁 Project Structure
 attendance_project/
 ├── backend/
 │   ├── server.js
 │   ├── config/
 │   │   └── db.js
 │   ├── controllers/
-│   │   └── authController.js
+│   │   ├── authController.js
 │   │   └── attendanceController.js
 │   ├── middlewares/
 │   │   └── authMiddleware.js
@@ -97,10 +128,8 @@ attendance_project/
 │
 └── frontend/
     ├── src/
-    │   ├── api/
-    │   │   └── axiosClient.js
-    │   ├── app/
-    │   │   └── store.js
+    │   ├── api/axiosClient.js
+    │   ├── app/store.js
     │   ├── features/
     │   │   ├── auth/authSlice.js
     │   │   └── attendance/attendanceSlice.js
@@ -118,12 +147,11 @@ attendance_project/
     │   └── styles.css
     └── package.json
 
-
 ⚙️ Environment Variables
 
-Create a .env file inside the backend folder.
+Create a .env file in the backend folder.
 
-You may copy from .env.example:
+You can copy from .env.example:
 
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
@@ -131,56 +159,39 @@ JWT_SECRET=your_super_secret_key
 CORS_ORIGIN=http://localhost:3000
 
 🚀 Running the Project Locally
-1. Clone the Repository
+1️⃣ Clone Repository
 git clone https://github.com/your-username/employee-attendance-system.git
 cd employee-attendance-system
 
-2. Backend Setup
+2️⃣ Backend Setup
 cd backend
 npm install
-cp .env.example .env   # then edit values inside .env
+cp .env.example .env   # Fill in .env values
 npm run dev            # or npm start
 
 
 Backend runs at:
 
-👉 http://localhost:5000
+➡️ http://localhost:5000
 
-3. (Optional but Recommended) Seed Sample Data
-
-Run the seed script:
-
+3️⃣ Seed Sample Data (Recommended)
 cd backend
 npm run seed
 
 
-This will automatically generate:
+This will create:
 
-👨‍💼 Managers
-
-10 managers
+👨‍💼 Managers (10)
 
 manager1@example.com
+ → manager10@example.com
 
-…
-
-manager10@example.com
-
-👨‍🔧 Employees
-
-20 employees
+👨‍🔧 Employees (20)
 
 emp1@example.com
+ → emp20@example.com
 
-…
-
-emp20@example.com
-
-🗓️ Attendance Data
-
-About 2 months of attendance
-
-Includes:
+🗓 Attendance (2 months)
 
 Present
 
@@ -195,10 +206,7 @@ Weekends skipped
 🔑 Default Password (from seed.js)
 Password@123
 
-
-(If you changed the password in the seed script, update it here.)
-
-4. Frontend Setup
+4️⃣ Frontend Setup
 cd ../frontend
 npm install
 npm start
@@ -206,39 +214,35 @@ npm start
 
 Frontend runs at:
 
-👉 http://localhost:3000
+➡️ http://localhost:3000
 
 🔐 Authentication Flow
 
-User logs in using email + password
+User enters email & password
 
-Backend returns a signed JWT token
+Backend validates & returns JWT
 
-Frontend stores token in:
-
-Redux state
-
-(Optional) localStorage
+Frontend stores JWT in Redux (and optionally localStorage)
 
 All protected routes send:
 
 Authorization: Bearer <token>
 
 📡 Backend API Endpoints
-🔑 Auth
+🔑 Authentication
 POST /api/auth/register
 POST /api/auth/login
-GET /api/auth/me
+GET  /api/auth/me
 
-👤 Employee Attendance
+👤 Employee APIs
 POST /api/attendance/checkin
 POST /api/attendance/checkout
 GET  /api/attendance/today
 GET  /api/attendance/my-history?month=MM&year=YYYY
 GET  /api/attendance/my-summary?month=MM&year=YYYY
 
-🧑‍💼 Manager Attendance
-GET /api/attendance/all?employeeId=&date=&status=
+👩‍💼 Manager APIs
+GET /api/attendance/all
 GET /api/attendance/employee/:id
 GET /api/attendance/summary?month=MM&year=YYYY
 GET /api/attendance/today-status
@@ -246,17 +250,15 @@ GET /api/attendance/export?start=YYYY-MM-DD&end=YYYY-MM-DD&employeeId=EMP001
 
 🖼️ Screenshots
 
-(Add your own screenshots):
+Add screenshots of:
 
 Employee Dashboard
 
-Check-in / Check-out
+Attendance Calendar
 
-Calendar View
+Attendance History Table
 
-Attendance History
-
-Daily Summary
+Monthly Summary
 
 Manager Dashboard
 
@@ -266,21 +268,17 @@ Reports Page
 
 ✅ Project Status
 Feature	Status
-Authentication (JWT)	✔️ Done
-Employee Check-In / Check-Out	✔️ Done
-Monthly History	✔️ Done
+Authentication	✔️ Done
+Check-In / Check-Out	✔️ Done
+Employee History	✔️ Done
 Monthly Summary	✔️ Done
 Manager Dashboard	✔️ Done
-Manager Calendar View	✔️ Done
+Manager Calendar	✔️ Done
 Reports Page	✔️ Done
 CSV Export	✔️ Done
-Seeding Script	✔️ Done
-Fully Responsive UI	✔️ Done
-
-📁 .env.example
-
-Create this file inside backend/:
-
+Seed Script	✔️ Done
+Responsive UI	✔️ Done
+📄 backend/.env.example
 # Backend server port
 PORT=5000
 
@@ -291,6 +289,4 @@ MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?r
 JWT_SECRET=your_super_secret_jwt_key_here
 
 # Frontend domain for CORS
-CORS_ORIGIN=http://localhost:3000
-# Allowed origin for CORS (frontend URL)
 CORS_ORIGIN=http://localhost:3000
