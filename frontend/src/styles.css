@@ -1,84 +1,205 @@
+/* ---------------------------------------------------------
+   GLOBAL PAGE STYLES
+----------------------------------------------------------*/
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f7fa;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f5f6fa;
+  color: #333;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+/* Page Wrapper */
 .main-content {
-  padding: 30px;
-  max-width: 1000px;
+  padding: 20px;
+  max-width: 1100px;
   margin: auto;
 }
 
-.card {
-  background: white;
-  border-radius: 10px;
-  padding: 25px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* ---------------------------------------------------------
+   NAVBAR
+----------------------------------------------------------*/
+
+.navbar {
+  background: #0a3d62;
+  color: white;
+  padding: 15px 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   margin-bottom: 25px;
 }
 
-h2, h3 {
-  color: #333;
-  margin-bottom: 15px;
+/* ---------------------------------------------------------
+   CARDS
+----------------------------------------------------------*/
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
+/* Dashboard Small Cards */
+.card h4 {
+  margin-bottom: 5px;
+  color: #0a3d62;
+}
+
+/* ---------------------------------------------------------
+   INPUTS & FORM ELEMENTS
+----------------------------------------------------------*/
+
+input,
+select {
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #0a3d62;
+}
+
+/* ---------------------------------------------------------
+   BUTTONS
+----------------------------------------------------------*/
+
 button {
-  background: #007bff;
+  background: #0a3d62;
   color: white;
-  border: none;
   padding: 10px 16px;
-  border-radius: 5px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+  font-size: 14px;
 }
 
 button:hover {
-  background: #0056b3;
+  background: #074166;
 }
 
 button:disabled {
-  background: #9cbad8;
+  background: #777;
   cursor: not-allowed;
 }
 
-input, select {
-  padding: 7px 10px;
-  border-radius: 5px;
-  border: 1px solid #bbb;
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-table th {
-  background: #f0f3f6;
-  padding: 10px;
-}
-
-table td {
-  background: #fff;
-  padding: 8px;
-}
-
-.navbar {
-  width: 100%;
-  background: #007bff;
-  color: white;
-  padding: 15px 24px;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 30px;
-}
-
 .link-button {
-  color: #007bff;
+  color: #0a3d62;
   text-decoration: none;
   font-weight: bold;
 }
 
 .link-button:hover {
   text-decoration: underline;
+}
+
+/* Logout Button */
+button.logout {
+  background: #c0392b;
+}
+
+button.logout:hover {
+  background: #962d22;
+}
+
+/* ---------------------------------------------------------
+   AUTH PAGES
+----------------------------------------------------------*/
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
+
+.auth-card {
+  width: 360px;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.error-text {
+  background: #ffe5e5;
+  border: 1px solid #ffb3b3;
+  color: #c0392b;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* ---------------------------------------------------------
+   TABLES
+----------------------------------------------------------*/
+
+table {
+  background: white;
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+table thead {
+  background: #0a3d62;
+  color: white;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+table tbody tr:hover {
+  background: #f1f7ff;
+}
+
+/* ---------------------------------------------------------
+   RESPONSIVE DESIGN
+----------------------------------------------------------*/
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 10px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  table th, table td {
+    padding: 8px;
+  }
+
+  input, select {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
 }

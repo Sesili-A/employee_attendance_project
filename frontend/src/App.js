@@ -25,7 +25,9 @@ const ProtectedRoute = ({ children, role }) => {
 
 function App() {
   return (
+    
     <div className="app-container">
+      <div className="navbar">Employee Attendance System</div>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
