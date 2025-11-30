@@ -95,16 +95,16 @@ const EmployeeDashboard = () => {
         <hr />
 
         {/* Navigation Buttons */}
-        <div style={{ marginTop: 20 }}>
-          <Link className="link-button" to="/employee/history">
-            View Attendance History →
-          </Link>
-          <br />
-          <br />
-          <Link className="link-button" to="/employee/summary">
-            View Monthly Summary →
-          </Link>
-        </div>
+        <div className="action-buttons">
+        <Link to="/employee/history" className="blue-btn">
+          View Attendance History
+        </Link>
+
+        <Link to="/employee/summary" className="blue-btn">
+          View Monthly Summary
+        </Link>
+      </div>
+
       </div>
     </div>
   );

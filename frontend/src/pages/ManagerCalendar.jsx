@@ -1,176 +1,180 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import axiosClient from "../api/axiosClient";
 import {
-  fetchAllAttendance,
-  fetchTeamSummary,
-} from "../features/attendance/attendanceSlice";
-
-import {
-  startOfMonth, endOfMonth, startOfWeek, endOfWeek,
-  addDays, addMonths, subMonths, format, isSameMonth, isSameDay
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  addDays,
+  addMonths,
+  subMonths,
+  format,
+  isSameMonth,
 } from "date-fns";
-
-// color map for days
-const statusColors = {
-  present: "#2ecc71",
-  absent: "#e74c3c",
-  late: "#f1c40f",
-  halfday: "orange",
-};
+import { Link } from "react-router-dom";
 
 const ManagerCalendar = () => {
-  const dispatch = useDispatch();
-  const { allRecords } = useSelector((state) => state.attendance);
-
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [dayEmployees, setDayEmployees] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [attendance, setAttendance] = useState([]);
 
   const month = currentMonth.getMonth() + 1;
   const year = currentMonth.getFullYear();
 
   useEffect(() => {
-    dispatch(fetchAllAttendance({ month, year }));
-    dispatch(fetchTeamSummary({ month, year }));
-  }, [month, year, dispatch]);
+    loadData();
+  }, [month, year]);
 
-  // build calendar
+  const loadData = async () => {
+    try {
+      const res = await axiosClient.get(
+        `/attendance/all?month=${month}&year=${year}`
+      );
+      setAttendance(res.data.records || []);
+    } catch (error) {
+      console.error("Failed to load calendar:", error);
+    }
+  };
+
+  // Build calendar dates
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
-
-  const startDate = startOfWeek(monthStart);
-  const endDate = endOfWeek(monthEnd);
+  const startDate = startOfWeek(monthStart, { weekStartsOn: 0 });
+  const endDate = endOfWeek(monthEnd, { weekStartsOn: 0 });
 
   const rows = [];
   let day = startDate;
 
   while (day <= endDate) {
-    const days = [];
+    const week = [];
 
     for (let i = 0; i < 7; i++) {
-      const dateString = format(day, "yyyy-MM-dd");
-      const recs = allRecords.filter((r) => r.date === dateString);
+      const dateStr = format(day, "yyyy-MM-dd");
 
-      let cellColor = "#f0f0f0";
+      // Counts
+      const dayRecords = attendance.filter((rec) => rec.date === dateStr);
+      const counts = {
+        present: dayRecords.filter((r) => r.status === "present").length,
+        late: dayRecords.filter((r) => r.status === "late").length,
+        half: dayRecords.filter((r) => r.status === "halfday").length,
+        absent: dayRecords.filter((r) => r.status === "absent").length,
+      };
 
-      if (recs.length > 0) {
-        if (recs.some((r) => r.status === "halfday")) cellColor = statusColors.halfday;
-        else if (recs.some((r) => r.status === "late")) cellColor = statusColors.late;
-        else if (recs.some((r) => r.status === "present")) cellColor = statusColors.present;
-      } else {
-        cellColor = statusColors.absent;
-      }
-
-      days.push({
+      week.push({
         date: new Date(day),
-        formatted: format(day, "d"),
-        records: recs,
-        color: cellColor,
+        dateNum: format(day, "d"),
+        counts,
       });
 
       day = addDays(day, 1);
     }
 
-    rows.push(days);
+    rows.push(week);
   }
 
-  const openModal = (cell) => {
-    setSelectedDate(cell.date);
-    setDayEmployees(cell.records);
-    setShowModal(true);
-  };
-
   return (
-    <div className="main-content">
-      <div className="card">
+    <div className="manager-calendar-container">
+      <div className="manager-calendar-box">
+        <h2 className="manager-calendar-title" >Manager Attendance Calendar</h2>
 
-        <h2>Manager Attendance Calendar</h2>
+        
 
-        {/* Month nav */}
+        {/* Navigation */}
         <div className="calendar-nav">
-          <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}>
+          <button
+            className="nav-btn"
+            onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+          >
             ◀ Prev
           </button>
 
           <h3>{format(currentMonth, "MMMM yyyy")}</h3>
 
-          <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
+          <button
+            className="nav-btn"
+            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+          >
             Next ▶
           </button>
         </div>
 
-        {/* Week header */}
-        <div className="calendar-header">
-          {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map((d) => (
-            <div key={d} className="calendar-header-cell">{d}</div>
+        {/* Calendar Header */}
+        <div className="manager-calendar-header">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+            <div key={d} className="header-cell">
+              {d}
+            </div>
           ))}
         </div>
 
-        {/* Calendar grid */}
-        <div className="calendar-grid">
+        {/* Calendar Grid */}
+        <div className="manager-calendar-grid">
           {rows.map((week, wi) => (
-            <div key={wi} className="calendar-row">
-              {week.map((cell, di) => (
+            <div key={wi} className="week-row">
+              {week.map((day, di) => (
                 <div
                   key={di}
-                  className={`calendar-cell ${
-                    isSameMonth(cell.date, monthStart) ? "" : "disabled"
-                  } ${isSameDay(cell.date, new Date()) ? "today" : ""}`}
-                  style={{ background: cell.color }}
-                  onClick={() => openModal(cell)}
+                  className={`manager-calendar-cell ${
+                    isSameMonth(day.date, monthStart) ? "" : "disabled"
+                  }`}
                 >
-                  <span className="date-label">{cell.formatted}</span>
+                  {/* Date */}
+                  <div className="date-number">{day.dateNum}</div>
+
+                  {/* Attendance Counts */}
+                  <div className="day-stats">
+                    {day.counts.present > 0 && (
+                      <div className="stat present">
+                        Present: {day.counts.present}
+                      </div>
+                    )}
+                    {day.counts.late > 0 && (
+                      <div className="stat late">
+                        Late: {day.counts.late}
+                      </div>
+                    )}
+                    {day.counts.half > 0 && (
+                      <div className="stat half">
+                        Half: {day.counts.half}
+                      </div>
+                    )}
+                    {day.counts.absent > 0 && (
+                      <div className="stat absent">
+                        Absent: {day.counts.absent}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
           ))}
         </div>
 
-        {/* Legend */}
-        <div className="legend">
-          <div><span className="dot" style={{ background: "#2ecc71" }}></span> Present</div>
-          <div><span className="dot" style={{ background: "#e74c3c" }}></span> Absent</div>
-          <div><span className="dot" style={{ background: "#f1c40f" }}></span> Late</div>
-          <div><span className="dot" style={{ background: "orange" }}></span> Half Day</div>
-        </div>
-
-        {/* MODAL */}
-        {showModal && (
-          <div className="modal-overlay" onClick={() => setShowModal(false)}>
-            <div className="modal" onClick={(e) => e.stopPropagation()}>
-              <h3>{format(selectedDate, "yyyy-MM-dd")}</h3>
-              <h4>Employee Attendance:</h4>
-
-              {dayEmployees.length === 0 ? (
-                <p>No attendance records</p>
-              ) : (
-                dayEmployees.map((rec) => (
-                  <div key={rec._id} style={{ marginBottom: 10 }}>
-                    <p><b>{rec.userId?.name}</b> ({rec.userId?.employeeId})</p>
-                    <p>Status: {rec.status}</p>
-                    <p>
-                      Check-In:{" "}
-                      {rec.checkInTime
-                        ? new Date(rec.checkInTime).toLocaleTimeString()
-                        : "-"}
-                    </p>
-                    <p>
-                      Check-Out:{" "}
-                      {rec.checkOutTime
-                        ? new Date(rec.checkOutTime).toLocaleTimeString()
-                        : "-"}
-                    </p>
-                    <p>Total Hours: {rec.totalHours}</p>
-                    <hr />
-                  </div>
-                ))
-              )}
-
-              <button onClick={() => setShowModal(false)}>Close</button>
+        {/* LEGEND */}
+            <div className="legend" style={{ marginTop: "20px" }}>
+            <div><span className="dot" style={{ background: "#2ecc71" }}></span> Present</div>
+            <div><span className="dot" style={{ background: "#f1c40f" }}></span> Late</div>
+            <div><span className="dot" style={{ background: "orange" }}></span> Half Day</div>
+            <div><span className="dot" style={{ background: "#e74c3c" }}></span> Absent</div>
             </div>
-          </div>
-        )}
+
+            {/* BUTTON BELOW CALENDAR */}
+            <div style={{ marginTop: "30px", textAlign: "center" }}>
+            <Link to="/manager">
+                <button
+                style={{
+                    background: "#0a3d62",
+                    padding: "10px 20px",
+                    borderRadius: "8px",
+                    border: "none",
+                    color: "white",
+                    cursor: "pointer",
+                    fontSize: "16px"
+                }}
+                >
+                ⬅ Back to Manager Dashboard
+                </button>
+            </Link>
+</div>
 
       </div>
     </div>
