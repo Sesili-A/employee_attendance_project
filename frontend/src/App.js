@@ -5,6 +5,9 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import ManagerDashboard from "./pages/ManagerDashboard";
+import EmployeeHistory from "./pages/EmployeeHistory";
+import EmployeeSummary from "./pages/EmployeeSummary";
+
 
 const ProtectedRoute = ({ children, role }) => {
   const { user } = useSelector((state) => state.auth);
@@ -50,8 +53,32 @@ function App() {
           path="/"
           element={<LandingRedirect />}
         />
+
+        <Route
+          path="/employee/history"
+          element={
+          <ProtectedRoute role="employee">
+              <EmployeeHistory />
+          </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/employee/summary"
+          element={
+            <ProtectedRoute role="employee">
+              <EmployeeSummary />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </div>
+
+    
+
+
+
   );
 }
 

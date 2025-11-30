@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHistory } from "../features/attendance/attendanceSlice";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeHistory = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { history, loading } = useSelector((state) => state.attendance);
 
   const [month, setMonth] = useState(11);
@@ -17,8 +19,10 @@ const EmployeeHistory = () => {
   return (
     <div className="main-content">
       <div className="card">
+        
         <h2>Attendance History</h2>
 
+        {/* Filters */}
         <div style={{ marginBottom: 20 }}>
           <label>Month:</label>
           <select value={month} onChange={(e) => setMonth(e.target.value)}>
@@ -34,10 +38,11 @@ const EmployeeHistory = () => {
             type="number"
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            style={{ width: 80 }}
+            style={{ width: 90 }}
           />
         </div>
 
+        {/* Table */}
         {loading ? (
           <p>Loading...</p>
         ) : (
@@ -51,31 +56,44 @@ const EmployeeHistory = () => {
                 <th>Total Hours</th>
               </tr>
             </thead>
+
             <tbody>
-              {history.map((rec) => (
-                <tr key={rec._id}>
-                  <td>{rec.date}</td>
-                  <td>{rec.status}</td>
-                  <td>
-                    {rec.checkInTime
-                      ? new Date(rec.checkInTime).toLocaleTimeString()
-                      : "-"}
+              {history.length === 0 ? (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No records found
                   </td>
-                  <td>
-                    {rec.checkOutTime
-                      ? new Date(rec.checkOutTime).toLocaleTimeString()
-                      : "-"}
-                  </td>
-                  <td>{rec.totalHours}</td>
                 </tr>
-              ))}
+              ) : (
+                history.map((rec) => (
+                  <tr key={rec._id}>
+                    <td>{rec.date}</td>
+                    <td>{rec.status}</td>
+                    <td>
+                      {rec.checkInTime
+                        ? new Date(rec.checkInTime).toLocaleTimeString()
+                        : "-"}
+                    </td>
+                    <td>
+                      {rec.checkOutTime
+                        ? new Date(rec.checkOutTime).toLocaleTimeString()
+                        : "-"}
+                    </td>
+                    <td>{rec.totalHours}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         )}
 
-        <Link to="/employee" style={{ display: "block", marginTop: 20 }}>
+        {/* Back Button */}
+        <button
+          style={{ marginTop: 25, background: "#555" }}
+          onClick={() => navigate("/employee")}
+        >
           ← Back to Dashboard
-        </Link>
+        </button>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import axios from "axios";
 
 const API = "http://localhost:5000/api";
 
+
 /* -------------------- EMPLOYEE THUNKS -------------------- */
 
 // Get today's status
@@ -95,6 +96,96 @@ export const fetchSummary = createAsyncThunk(
   }
 );
 
+export const fetchAllAttendance = createAsyncThunk(
+  "attendance/fetchAllAttendance",
+  async ({ employeeId, date, status }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const params = [];
+      if (employeeId) params.push(`employeeId=${employeeId}`);
+      if (date) params.push(`date=${date}`);
+      if (status) params.push(`status=${status}`);
+
+      const query = params.length ? `?${params.join("&")}` : "";
+
+      const res = await axios.get(
+        `${API}/attendance/all${query}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data.records;
+    } catch (err) {
+      return rejectWithValue("Failed to fetch all attendance");
+    }
+  }
+);
+
+
+export const fetchTodayStatusAll = createAsyncThunk(
+  "attendance/fetchTodayStatusAll",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+      const res = await axios.get(
+        `${API}/attendance/today-status`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data;
+    } catch (err) {
+      return rejectWithValue("Failed to fetch today's status for all employees");
+    }
+  }
+);
+
+
+export const fetchTeamSummary = createAsyncThunk(
+  "attendance/fetchTeamSummary",
+  async ({ month, year }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const res = await axios.get(
+        `${API}/attendance/summary?month=${month}&year=${year}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue("Failed to fetch team summary");
+    }
+  }
+);
+
+export const exportCSV = createAsyncThunk(
+  "attendance/exportCSV",
+  async ({ start, end, employeeId }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const params = [];
+      if (start) params.push(`start=${start}`);
+      if (end) params.push(`end=${end}`);
+      if (employeeId) params.push(`employeeId=${employeeId}`);
+
+      const query = params.length ? `?${params.join("&")}` : "";
+
+      const res = await axios.get(
+        `${API}/attendance/export${query}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: "blob",
+        }
+      );
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue("CSV export failed");
+    }
+  }
+);
+
+
+
 
 /* -------------------- SLICE -------------------- */
 
@@ -104,6 +195,9 @@ const attendanceSlice = createSlice({
     today: null,
     history: [],
     summary: null,
+    allRecords: [],
+    todayAll: null,
+    teamSummary: null,
     loading: false,
     error: null,
   },
@@ -171,7 +265,26 @@ const attendanceSlice = createSlice({
       .addCase(fetchSummary.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      
+      // ALL ATTENDANCE
+      .addCase(fetchAllAttendance.fulfilled, (state, action) => {
+        state.allRecords = action.payload;
+      })
+
+      // TODAY STATUS ALL
+      .addCase(fetchTodayStatusAll.fulfilled, (state, action) => {
+        state.todayAll = action.payload;
+      })
+
+      // TEAM SUMMARY
+      .addCase(fetchTeamSummary.fulfilled, (state, action) => {
+        state.teamSummary = action.payload;
+      })
+
+      // CSV EXPORT DOES NOT UPDATE STATE
+
+
   },
 });
 
