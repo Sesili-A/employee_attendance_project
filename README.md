@@ -121,7 +121,9 @@ attendance_project/
 
 ⚙️ Environment Variables
 
-Create a .env file inside the backend folder (see .env.example):
+Create a .env file inside the backend folder.
+
+You may copy from .env.example:
 
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
@@ -129,38 +131,72 @@ JWT_SECRET=your_super_secret_key
 CORS_ORIGIN=http://localhost:3000
 
 🚀 Running the Project Locally
-1. Clone the repo
+1. Clone the Repository
 git clone https://github.com/your-username/employee-attendance-system.git
 cd employee-attendance-system
 
 2. Backend Setup
 cd backend
 npm install
-cp .env.example .env   # then edit .env with your values
-npm run dev            # or: npm start
+cp .env.example .env   # then edit values inside .env
+npm run dev            # or npm start
 
 
-The backend should run on http://localhost:5000
+Backend runs at:
 
-3. Seed Sample Data (optional but recommended)
+👉 http://localhost:5000
+
+3. (Optional but Recommended) Seed Sample Data
+
+Run the seed script:
+
 cd backend
 npm run seed
 
 
-This will create:
+This will automatically generate:
 
-10 managers (manager1@example.com …)
+👨‍💼 Managers
 
-20 employees (emp1@example.com …)
+10 managers
 
-Sample attendance data for ~2 months
+manager1@example.com
 
-Default password used in seeding (example):
+…
 
-Password: Password@123
+manager10@example.com
+
+👨‍🔧 Employees
+
+20 employees
+
+emp1@example.com
+
+…
+
+emp20@example.com
+
+🗓️ Attendance Data
+
+About 2 months of attendance
+
+Includes:
+
+Present
+
+Late
+
+Half Day
+
+Absent
+
+Weekends skipped
+
+🔑 Default Password (from seed.js)
+Password@123
 
 
-(Update above line if you changed it inside seed.js.)
+(If you changed the password in the seed script, update it here.)
 
 4. Frontend Setup
 cd ../frontend
@@ -168,101 +204,93 @@ npm install
 npm start
 
 
-The frontend should run on http://localhost:3000
+Frontend runs at:
+
+👉 http://localhost:3000
 
 🔐 Authentication Flow
 
-Users login with email + password
+User logs in using email + password
 
-Server returns a JWT token
+Backend returns a signed JWT token
 
-Frontend stores token in Redux state (and optionally localStorage)
+Frontend stores token in:
 
-All protected API calls send:
+Redux state
+
+(Optional) localStorage
+
+All protected routes send:
 
 Authorization: Bearer <token>
 
-📡 Main API Endpoints (Backend)
-
-Auth
-
+📡 Backend API Endpoints
+🔑 Auth
 POST /api/auth/register
-
 POST /api/auth/login
+GET /api/auth/me
 
-GET /api/auth/me (requires JWT)
-
-Attendance – Employee
-
+👤 Employee Attendance
 POST /api/attendance/checkin
-
 POST /api/attendance/checkout
+GET  /api/attendance/today
+GET  /api/attendance/my-history?month=MM&year=YYYY
+GET  /api/attendance/my-summary?month=MM&year=YYYY
 
-GET /api/attendance/today
-
-GET /api/attendance/my-history?month=MM&year=YYYY
-
-GET /api/attendance/my-summary?month=MM&year=YYYY
-
-Attendance – Manager
-
+🧑‍💼 Manager Attendance
 GET /api/attendance/all?employeeId=&date=&status=
-
 GET /api/attendance/employee/:id
-
 GET /api/attendance/summary?month=MM&year=YYYY
-
 GET /api/attendance/today-status
-
 GET /api/attendance/export?start=YYYY-MM-DD&end=YYYY-MM-DD&employeeId=EMP001
 
-📷 Screenshots
+🖼️ Screenshots
 
-(Add your own screenshots here – Employee Dashboard, Manager Dashboard, Calendar, Reports, etc.)
+(Add your own screenshots):
 
-✅ Status
+Employee Dashboard
 
- Authentication & Authorization
+Check-in / Check-out
 
- Employee attendance check-in / check-out
+Calendar View
 
- Employee history + summary
+Attendance History
 
- Manager dashboards
+Daily Summary
 
- Manager calendar view
+Manager Dashboard
 
- Reports page
+Manager Calendar
 
- CSV export
+Reports Page
 
- Seed script
+✅ Project Status
+Feature	Status
+Authentication (JWT)	✔️ Done
+Employee Check-In / Check-Out	✔️ Done
+Monthly History	✔️ Done
+Monthly Summary	✔️ Done
+Manager Dashboard	✔️ Done
+Manager Calendar View	✔️ Done
+Reports Page	✔️ Done
+CSV Export	✔️ Done
+Seeding Script	✔️ Done
+Fully Responsive UI	✔️ Done
 
- Responsive UI
+📁 .env.example
 
-👤 Author
+Create this file inside backend/:
 
-Your Name – [your.email@example.com
-]
-
-Feel free to fork, improve, and extend this Attendance System.
-
-
----
-
-## 4️⃣ `.env.example`
-
-**File:** `backend/.env.example`
-
-```env
 # Backend server port
 PORT=5000
 
 # MongoDB connection string
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/<database-name>?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority
 
-# JWT secret for signing tokens
+# JWT secret for signing authentication tokens
 JWT_SECRET=your_super_secret_jwt_key_here
 
+# Frontend domain for CORS
+CORS_ORIGIN=http://localhost:3000
 # Allowed origin for CORS (frontend URL)
 CORS_ORIGIN=http://localhost:3000
