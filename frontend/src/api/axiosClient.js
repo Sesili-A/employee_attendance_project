@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "https://employee-attendance-project-1.onrender.com/api",
+  baseURL: "http://localhost:5000/api",
 });
 
 

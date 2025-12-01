@@ -219,34 +219,34 @@ export const getMySummary = async (req, res) => {
 };
 
 /* ===================== MANAGER APIS ===================== */
-
-/**
- * Manager: GET /api/attendance/all
- * Optional query: ?employeeId=EMP001&date=2025-11-29&status=present
- */
 export const getAllAttendance = async (req, res) => {
   try {
-    const { employeeId, date, status } = req.query;
+    const { employeeId, date, status, month, year } = req.query;
 
     const filter = {};
 
-    if (status) {
-      filter.status = status;
+    // Filter by month + year (for calendar)
+    if (month && year) {
+      const monthStr = String(month).padStart(2, "0");
+      const prefix = `${year}-${monthStr}`; // e.g., 2025-12
+      filter.date = { $regex: `^${prefix}` };
     }
-    if (date) {
-      filter.date = date; // exact date "YYYY-MM-DD"
-    }
+
+    // Filter by specific date
+    if (date) filter.date = date;
+
+    if (status) filter.status = status;
+
+    // Employee filter
     if (employeeId) {
       const user = await User.findOne({ employeeId });
-      if (!user) {
-        return res.json({ records: [] });
-      }
+      if (!user) return res.json({ records: [] });
       filter.userId = user._id;
     }
 
     const records = await Attendance.find(filter)
       .populate("userId", "name email employeeId department")
-      .sort({ date: -1 })
+      .sort({ date: 1 })
       .lean();
 
     res.json({ records });
@@ -255,6 +255,8 @@ export const getAllAttendance = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 /**
  * Manager: GET /api/attendance/employee/:id

@@ -8,11 +8,24 @@ import attendanceRoutes from "./routes/attendanceRoutes.js";
 import autoAbsentMiddleware from "./middlewares/autoAbsentMiddleware.js";
 dotenv.config();
 connectDB();
-
+const allowedOrigins = [
+  process.env.CORS_ORIGIN,
+  "http://localhost:3000",
+  
+];
 const app = express();
 app.use(express.json());
 app.use(autoAbsentMiddleware);
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
 app.use("/api/attendance", attendanceRoutes);
